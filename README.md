@@ -40,7 +40,6 @@ Ada beberapa cara untuk membuka file HTML:
 
 Untuk menampilkan logo di QR code:
 
-![Upload Logo](docs/upload-logo.png)
 
 1. **Siapkan file gambar logo** (format: JPG, PNG, GIF, dll)
 2. **Klik tombol "Choose File"** di bagian "Upload Logo"
@@ -48,7 +47,6 @@ Untuk menampilkan logo di QR code:
 4. **Logo akan otomatis muncul** di tengah QR code
 5. **Sesuaikan ukuran logo** menggunakan slider "Ukuran Logo"
 
-![QR Code dengan Logo](docs/qr-with-logo.png)
 
 **Tips untuk Logo:**
 - Gunakan gambar dengan latar belakang transparan (PNG) untuk hasil terbaik
