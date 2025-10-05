@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator dengan Logo</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0e27;
+      min-height: 100vh;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(135deg, #667eea 0%, #764ba2 100%),
+        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.3), transparent 50%);
+      opacity: 0.1;
+      z-index: 0;
+    }
+    
+    /* Grid pattern overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 
+        0 0 80px rgba(99, 102, 241, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    
+    h1 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+    }
+    
+    label {
+      display: block;
+      margin-top: 25px;
+      margin-bottom: 8px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    input[type="text"] { 
+      padding: 14px 18px;
+      margin: 5px 0 15px 0;
+      width: 100%;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 12px;
+      font-size: 15px;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      background: rgba(30, 41, 59, 0.8);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    input[type="text"]::placeholder {
+      color: #64748b;
+    }
+    
+    input[type="file"] {
+      margin: 5px 0 15px 0;
+      width: 100%;
+      padding: 12px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px dashed rgba(99, 102, 241, 0.4);
+      border-radius: 12px;
+      color: #e2e8f0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    input[type="file"]:hover {
+      border-color: #6366f1;
+      background: rgba(30, 41, 59, 0.8);
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      margin: 15px 0;
+      height: 6px;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 10px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+    
+    button { 
+      padding: 16px;
+      margin: 25px 0 10px 0;
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    button:hover::before {
+      left: 100%;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    #qrcode-container { 
+      margin: 40px 0;
+      text-align: center;
+      position: relative;
+      display: inline-block;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    #qrcode {
+      position: relative;
+      display: inline-block;
+      padding: 25px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(99, 102, 241, 0.1);
+    }
+    
+    #logo-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 5px;
+      border-radius: 8px;
+      display: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    #logo-overlay img {
+      display: block;
+      border-radius: 5px;
+    }
+    
+    .logo-size-info {
+      color: #94a3b8;
+      font-size: 13px;
+      margin-top: 8px;
+      font-style: italic;
+    }
+    
+    .download-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      margin-top: 20px;
+    }
+    
+    .download-btn:hover {
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+    }
+    
+    /* Glowing effect on focus */
+    *:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚡ QR Code Generator</h1>
+    <p class="subtitle">Generate QR Code dengan Logo Custom</p>
+    
+    <label for="text">Text atau URL:</label>
+    <input type="text" id="text" placeholder="Masukkan URL atau text" value="https://example.com">
+    
+    <label for="logo">Upload Logo:</label>
+    <input type="file" id="logo" accept="image/*">
+    
+    <label for="logoSize">Ukuran Logo: <span id="logoSizeValue">60</span>px</label>
+    <input type="range" id="logoSize" min="30" max="120" value="60">
+    <div class="logo-size-info">Sesuaikan ukuran logo agar QR code tetap dapat di-scan</div>
+    
+    <button onclick="generateQR()">Generate QR Code</button>
+    
+    <div id="qrcode-container">
+      <div id="qrcode"></div>
+      <div id="logo-overlay"></div>
+    </div>
+
+    <button class="download-btn" onclick="downloadQR()">Download QR Code</button>
+  </div>
+
+  <script>
+    let qrcode = null;
+    let logoImage = null;
+
+    // Update nilai ukuran logo
+    document.getElementById('logoSize').addEventListener('input', function(e) {
+      document.getElementById('logoSizeValue').textContent = e.target.value;
+      if (logoImage) {
+        updateLogoSize();
+      }
+    });
+
+    // Handle upload logo
+    document.getElementById('logo').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          logoImage = event.target.result;
+          generateQR();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function generateQR() {
+      const text = document.getElementById('text').value;
+      const qrcodeDiv = document.getElementById('qrcode');
+      const logoOverlay = document.getElementById('logo-overlay');
+      
+      // Clear previous QR code
+      qrcodeDiv.innerHTML = '';
+      logoOverlay.style.display = 'none';
+      
+      // Generate new QR code
+      qrcode = new QRCode(qrcodeDiv, {
+        text: text,
+        width: 300,
+        height: 300,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H // High error correction untuk logo
+      });
+
+      // Add logo if available
+      if (logoImage) {
+        setTimeout(() => {
+          updateLogoSize();
+          logoOverlay.style.display = 'block';
+        }, 100);
+      }
+    }
+
+    function updateLogoSize() {
+      const logoOverlay = document.getElementById('logo-overlay');
+      const logoSize = document.getElementById('logoSize').value;
+      
+      logoOverlay.innerHTML = `<img src="${logoImage}" width="${logoSize}" height="${logoSize}" alt="Logo">`;
+    }
+
+    function downloadQR() {
+      const qrcodeContainer = document.getElementById('qrcode-container');
+      const canvas = document.querySelector('#qrcode canvas');
+      
+      if (!canvas) {
+        alert('Generate QR code terlebih dahulu!');
+        return;
+      }
+
+      // Create a new canvas with padding
+      const padding = 40; // Padding putih di sekitar QR code
+      const mergedCanvas = document.createElement('canvas');
+      const ctx = mergedCanvas.getContext('2d');
+      
+      mergedCanvas.width = canvas.width + (padding * 2);
+      mergedCanvas.height = canvas.height + (padding * 2);
+      
+      // Fill with white background
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, mergedCanvas.width, mergedCanvas.height);
+      
+      // Draw QR code with padding
+      ctx.drawImage(canvas, padding, padding);
+      
+      // Draw logo if exists
+      if (logoImage) {
+        const logoSize = parseInt(document.getElementById('logoSize').value);
+        const img = new Image();
+        img.onload = function() {
+          const x = (mergedCanvas.width - logoSize) / 2;
+          const y = (mergedCanvas.height - logoSize) / 2;
+          
+          // Draw white background for logo
+          ctx.fillStyle = 'white';
+          ctx.fillRect(x - 5, y - 5, logoSize + 10, logoSize + 10);
+          
+          // Draw logo
+          ctx.drawImage(img, x, y, logoSize, logoSize);
+          
+          // Download
+          const url = mergedCanvas.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.download = 'qrcode-with-logo.png';
+          link.href = url;
+          link.click();
+        };
+        img.src = logoImage;
+      } else {
+        // Download without logo
+        const url = mergedCanvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = url;
+        link.click();
+      }
+    }
+
+    // Generate QR pertama kali
+    generateQR();
+  </script>
+</body>
+</html>
